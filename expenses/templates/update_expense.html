@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% load static %} {% block body%}
+<div class="container">
+  <!-- update_expense.html -->
+  <h2>Update Expense</h2>
+
+  <form method="post" action="{% url 'update_expense' expense.pk %}">
+    {% csrf_token %}
+    <div>
+      <label for="amount">Amount:</label>
+      <input
+        type="text"
+        name="amount"
+        id="amount"
+        value="{{ expense.amount }}"
+      />
+    </div>
+    <div>
+      <label for="description">Description:</label>
+      <textarea name="description" id="description">
+{{ expense.description }}</textarea
+      >
+    </div>
+    <button type="submit">Update</button>
+  </form>
+</div>
+{% endblock %}

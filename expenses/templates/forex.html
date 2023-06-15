@@ -1,0 +1,10 @@
+{% extends 'base.html' %} {% load static %} {% block body%}
+<div class="container">
+  <h1>Forex</h1>
+  {% for bar in bars %}
+  <div class="row card shadow">
+    <h6>{{ bar }}</h6>
+  </div>
+  {% endfor %}
+</div>
+{% endblock%}

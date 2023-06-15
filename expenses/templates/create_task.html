@@ -1,0 +1,78 @@
+{% extends 'base.html' %} {% load static %} {% block body%}
+<div class="container">
+  <style>
+    .priority-1 {
+      background-color: orangered;
+      /* Additional styles for priority 1 */
+    }
+
+    .priority-2 {
+      background-color: orange;
+      /* Additional styles for priority 2 */
+    }
+
+    .priority-3 {
+      background-color: rgb(255, 189, 66);
+      /* Additional styles for priority 2 */
+    }
+
+    .priority-4 {
+      background-color: rgba(255, 166, 0, 0.13);
+      /* Additional styles for priority 2 */
+    }
+
+    /* Define styles for other priority levels */
+  </style>
+
+  <!-- create_task.html -->
+  <h2 class="mb-3">Assign a new task</h2>
+
+  <form class="shadow card p-5" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+          {{ form.as_p }}
+
+          <button class="btn btn-lg w-100 btn-success" type="submit">
+            Add new task
+          </button>
+        </div>
+
+        <div class="col-6">
+          <div class="list-group">
+            {% for task in new_tasks %} {% if task.completed != 'True' %}
+            <a
+              href="#"
+              class="list-group-item list-group-item-action flex-column align-items-start priority-{{ task.priority }}"
+            >
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ task.assigned_to.first_name }}</h5>
+                <small>{{ task.status|capfirst }}</small>
+              </div>
+              <p class="mb-1">{{ task.title }}</p>
+              <small>{{ task.created_at|timesince }} ago</small>
+            </a>
+            {% else %}
+            <a
+              href="#"
+              class="list-group-item list-group-item-action flex-column align-items-start"
+            >
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ task.assigned_to }}</h5>
+                <small class="text-muted">{{ task.status|capfirst }}</small>
+              </div>
+              <p class="mb-1">{{ task.title }}</p>
+              <small class="text-muted"
+                >{{ task.created_at|timesince }} ago</small
+              >
+            </a>
+            {% endif %} {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

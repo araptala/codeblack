@@ -1,0 +1,13 @@
+{% extends 'base.html' %} {% load static %} {% block body%}
+<div class="container">
+  <!-- delete_task.html -->
+  <h2>Delete Task</h2>
+
+  <p>Are you sure you want to delete the task?</p>
+
+  <form method="post" action="{% url 'delete_task' task.pk %}">
+    {% csrf_token %}
+    <button type="submit">Delete</button>
+  </form>
+</div>
+{% endblock %}

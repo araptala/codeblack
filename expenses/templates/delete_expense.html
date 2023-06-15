@@ -1,0 +1,13 @@
+{% extends 'base.html' %} {% load static %} {% block body%}
+<div class="container">
+  <!-- delete_expense.html -->
+  <h2>Delete Expense</h2>
+
+  <p>Are you sure you want to delete the expense?</p>
+
+  <form method="post" action="{% url 'delete_expense' expense.pk %}">
+    {% csrf_token %}
+    <button type="submit">Delete</button>
+  </form>
+</div>
+{% endblock %}

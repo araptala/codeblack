@@ -1,0 +1,205 @@
+{% extends 'base.html' %} {% load static %} {% block body%}
+<div class="container">
+  <h1 class="text-center">Dashboard</h1>
+  <hr />
+  <div class="container">
+    <h3>Ticket sales</h3>
+    <div class="row">
+      <div class="col-6">
+        <div class="card shadow p-4 mt-3 mb-5">
+          <table class="table table-sm bg-secondary">
+            <thead>
+              <tr>
+                <th scope="col text-muted">Member</th>
+                <th scope="col text-muted">Orders</th>
+                <th scope="col text-muted">Sales</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="col">Sami Flinch</th>
+                <th scope="col">14</th>
+                <th id="sami_sales" scope="col">53</th>
+              </tr>
+              <tr>
+                <th scope="col">Arap</th>
+                <th scope="col">22</th>
+                <th id="arap_sales" scope="col">50</th>
+              </tr>
+              <tr>
+                <th scope="col">Kingsley</th>
+                <th scope="col">55</th>
+                <th id="kingsley_sales" scope="col">73</th>
+              </tr>
+              <tr>
+                <th scope="col">Eston</th>
+                <th scope="col">55</th>
+                <th id="eston_sales" scope="col">93</th>
+              </tr>
+              <tr>
+                <th scope="col">Neal</th>
+                <th scope="col">88</th>
+                <th id="neal_sales" scope="col">63</th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <canvas id="myChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row d-flex justify-content-around bg-light rounded border py-5">
+    <div class="card w-auto m-3 shadow p-3">
+      <h6>Amount</h6>
+      <h2>{{ total_amount }}</h2>
+      <small
+        ><span class="fw-bold text-success">2.65%</span> More this month</small
+      >
+    </div>
+    <div class="card w-auto m-3 shadow p-3">
+      <h6>Earnings</h6>
+      <h2>$600.22</h2>
+      <small
+        ><span class="fw-bold text-success">4.65%</span> More that usual</small
+      >
+    </div>
+    <div class="card w-auto m-3 shadow p-3">
+      <h6>Today's Expenses</h6>
+      <h2>$43.33</h2>
+      <small
+        ><span class="fw-bold text-danger">-2.65%</span> Less that usual</small
+      >
+    </div>
+  </div>
+  <div class="card shadow p-4 my-5">
+    <h1 class="text-warning fw-bold">
+      All Tasks
+      <span class="float-end"><i class="fa-solid fa-list-check"></i></span>
+    </h1>
+    <table class="table table-sm bg-secondary">
+      <small class="text-muted">All sceduled, Pending and Complete tasks</small>
+      <hr />
+      <thead>
+        <tr>
+          <th scope="col">Task</th>
+          <th scope="col">Assignee</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">Status</th>
+          <th scope="col">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+        <tr>
+          <th scope="col">{{ task.title }}</th>
+          <th scope="col">{{ task.assigned_to.username|capfirst }}</th>
+          <th scope="col">{{ task.created_at }}</th>
+          <th scope="col">
+            {% if task.status == 'pending' %}
+            <span class="badge bg-primary">In Progress</span>
+            {% else %}
+            <span class="badge bg-secondary">Scheduled</span>
+            {% endif %}
+          </th>
+          <th scope="col">{{ task.amount }}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card shadow p-4 mt-3 mb-5">
+    <h1 class="text-success fw-bold">
+      Completed Tasks
+      <span class="float-end"><i class="fa-solid fa-check"></i></span>
+    </h1>
+    <table class="table table-sm bg-secondary">
+      <h6 class="text-muted fw-bold">Completed Tasks</h6>
+      <hr />
+      <thead>
+        <tr>
+          <th scope="col text-muted">Task</th>
+          <th scope="col text-muted">Assignee</th>
+          <th scope="col text-muted">Start Date</th>
+          <th scope="col text-muted">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in completed_tasks %}
+        <tr>
+          <th scope="col">{{ task.title }}</th>
+          <th scope="col">{{ task.assigned_to.username|capfirst }}</th>
+          <th scope="col">{{ task.created_at }}</th>
+          <th scope="col">{{ task.amount }}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card shadow p-4 mt-3 mb-5">
+    <h1 class="text-info fw-bold">
+      Pending Tasks
+      <span class="float-end"><i class="fa-solid fa-hourglass-start"></i></span>
+    </h1>
+    <table class="table table-sm bg-secondary">
+      <h6 class="text-muted fw-bold">Tasks in progress...</h6>
+      <hr />
+      <thead>
+        <tr>
+          <th scope="col text-muted">Task</th>
+          <th scope="col text-muted">Assignee</th>
+          <th scope="col text-muted">Start Date</th>
+          <th scope="col text-muted">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in pending_tasks %}
+        <tr>
+          <th scope="col">{{ task.title }}</th>
+          <th scope="col">{{ task.assigned_to.username|capfirst }}</th>
+          <th scope="col">{{ task.created_at }}</th>
+          <th scope="col">{{ task.amount }}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const ctx = document.getElementById("myChart");
+    const samiSales = document.getElementById("sami_sales").innerHTML;
+    const arapSales = document.getElementById("arap_sales").innerHTML;
+    const kingsleySales = document.getElementById("kingsley_sales").innerHTML;
+    const estonSales = document.getElementById("eston_sales").innerHTML;
+    const nealSales = document.getElementById("neal_sales").innerHTML;
+
+    new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["Sami Flinch", "G400", "Kingsley", "Eston", "Neal"],
+        datasets: [
+          {
+            label: "Sold Tickets",
+            data: [samiSales, arapSales, kingsleySales, estonSales, nealSales],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "top",
+          },
+        },
+      },
+    });
+  </script>
+</div>
+{% endblock%}

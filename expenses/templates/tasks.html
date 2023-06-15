@@ -1,0 +1,78 @@
+{% extends 'base.html' %} {% load static %} {% block body%}
+<div class="container">
+  <small
+    >Welcome back {{ user.first_name|capfirst }}, add a
+    <a class="link" href="{% url 'newtask' %}">New Task</a>
+  </small>
+  <div class="card shadow p-4 mt-3 mb-5">
+    <h1 class="text-primary fw-bold">
+      Active Tasks
+      <span class="float-end"><i class="fa-solid fa-hourglass-start"></i></span>
+    </h1>
+    <table class="table table-sm bg-secondary">
+      <h6 class="text-muted fw-bold">On going tasks...</h6>
+      <hr />
+      <thead>
+        <tr>
+          <th scope="col">Task</th>
+          <th scope="col">Assignee</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">Status</th>
+          <th scope="col">Costs</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %} {% if task.status == 'pending' %}
+        <tr>
+          <th scope="col">{{ task.title }}</th>
+          <th scope="col">{{ task.assigned_to.first_name|capfirst }}</th>
+          <th scope="col">{{ task.created_at }}</th>
+          <th scope="col">
+            {% if task.status == 'pending' %}
+            <span id="progressTask" class="badge bg-primary">In Progress</span>
+            {% else %}
+            <span class="badge bg-secondary">Scheduled</span>
+            {% endif %}
+          </th>
+          <th scope="col">{{ task.amount }}</th>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card shadow p-4 mt-3 mb-5">
+    <h1 class="text-success fw-bold">
+      Completed Tasks
+      <span class="float-end"><i class="fa-solid fa-check"></i></span>
+    </h1>
+    <table class="table table-sm bg-secondary">
+      <h6 class="text-muted fw-bold">All Complete Tasks</h6>
+      <hr />
+      <thead>
+        <tr>
+          <th scope="col">Task</th>
+          <th scope="col">Assignee</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">Status</th>
+          <th scope="col">Expense</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %} {% if task.status == 'complete' %}
+        <tr>
+          <th scope="col">{{ task.title }}</th>
+          <th scope="col">{{ task.assigned_to.first_name|capfirst }}</th>
+          <th scope="col">{{ task.created_at }}</th>
+          <th scope="col">
+            {% if task.status == 'complete' %}
+            <span class="badge bg-success">Completed</span>
+            {% endif %}
+          </th>
+          <th id="totalExpenses" scope="col">{{ task.amount }}</th>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock%}
